@@ -1,0 +1,10 @@
+<v1:xo version="1.0" xmlns:v1="http://buschmais.com/xo/schema/v1.0">
+	<xo-unit name="OrientDbEmbedded">
+		<description>This is a test unit for OrientDB embedded.</description>
+		<url>memory:orientdb</url>
+		<provider>com.smbtec.xo.orientdb.api.OrientDbXOProvider</provider>
+		<types>
+			<type>com.smbtec.xo.orientdb.test.bootstrap.composite.A</type>
+		</types>
+	</xo-unit>
+</v1:xo>
