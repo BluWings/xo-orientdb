@@ -12,9 +12,9 @@ import com.buschmais.xo.spi.annotation.QueryDefinition;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface OSQL {
 
-	/**
-	 * @return Returns the OrientDB SQL expression as {@link String}.
-	 */
-	String value();
+    /**
+     * @return Returns the OrientDB SQL expression as {@link String}.
+     */
+    String value();
 
 }

@@ -23,85 +23,85 @@ import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
 /**
- * 
+ *
  * @author Lars Martin - lars.martin@smb-tec.com
- * 
+ *
  */
 public class OrientDbDatastoreSessionImpl implements OrientDbDatastoreSession<OrientGraph> {
 
-	/**
-	 * This constant contains the prefix for discriminator properties.
-	 */
-	public static final String XO_DISCRIMINATORS_PROPERTY = "_xo_discriminator_";
+    /**
+     * This constant contains the prefix for discriminator properties.
+     */
+    public static final String XO_DISCRIMINATORS_PROPERTY = "_xo_discriminator_";
 
-	private OrientGraph graph;
+    private final OrientGraph graph;
 
-	public OrientDbDatastoreSessionImpl(OrientGraph graph) {
-		this.graph = graph;
-	}
+    public OrientDbDatastoreSessionImpl(final OrientGraph graph) {
+        this.graph = graph;
+    }
 
-	@Override
-	public DatastoreTransaction getDatastoreTransaction() {
-		return new OrientDbTransaction(graph);
-	}
+    @Override
+    public DatastoreTransaction getDatastoreTransaction() {
+        return new OrientDbTransaction(graph);
+    }
 
-	@Override
-	public boolean isEntity(Object o) {
-		return Vertex.class.isAssignableFrom(o.getClass());
-	}
+    @Override
+    public boolean isEntity(final Object o) {
+        return Vertex.class.isAssignableFrom(o.getClass());
+    }
 
-	@Override
-	public boolean isRelation(Object o) {
-		return Edge.class.isAssignableFrom(o.getClass());
-	}
+    @Override
+    public boolean isRelation(final Object o) {
+        return Edge.class.isAssignableFrom(o.getClass());
+    }
 
-	@Override
-	public Set<String> getEntityDiscriminators(Vertex entity) {
-		final Set<String> discriminators = new HashSet<>();
-		for (final String key : entity.getPropertyKeys()) {
-			if (key.startsWith(XO_DISCRIMINATORS_PROPERTY)) {
-				final String discriminator = entity.getProperty(key);
-				discriminators.add(discriminator);
-			}
-		}
-		if (discriminators.size() == 0) {
-			throw new XOException(
-					"A vertex was found without discriminators. Does another framework alter the database?");
-		}
-		return discriminators;
-	}
+    @Override
+    public Set<String> getEntityDiscriminators(final Vertex entity) {
+        final Set<String> discriminators = new HashSet<>();
+        for (final String key : entity.getPropertyKeys()) {
+            if (key.startsWith(XO_DISCRIMINATORS_PROPERTY)) {
+                final String discriminator = entity.getProperty(key);
+                discriminators.add(discriminator);
+            }
+        }
+        if (discriminators.isEmpty()) {
+            throw new XOException(
+                    "A vertex was found without discriminators. Does another framework alter the database?");
+        }
+        return discriminators;
+    }
 
-	@Override
-	public String getRelationDiscriminator(Edge relation) {
-		return relation.getLabel();
-	}
+    @Override
+    public String getRelationDiscriminator(final Edge relation) {
+        return relation.getLabel();
+    }
 
-	@Override
-	public Object getEntityId(Vertex entity) {
-		return entity.getId();
-	}
+    @Override
+    public Object getEntityId(final Vertex entity) {
+        return entity.getId();
+    }
 
-	@Override
-	public Object getRelationId(Edge relation) {
-		return relation.getId();
-	}
+    @Override
+    public Object getRelationId(final Edge relation) {
+        return relation.getId();
+    }
 
-	@Override
-	public Vertex createEntity(TypeMetadataSet<EntityTypeMetadata<VertexMetadata>> types, Set<String> discriminators) {
-		Vertex vertex = graph.addVertex(null);
-		for (final String discriminator : discriminators) {
-			vertex.setProperty(XO_DISCRIMINATORS_PROPERTY + discriminator, discriminator);
-		}
-		return vertex;
-	}
+    @Override
+    public Vertex createEntity(final TypeMetadataSet<EntityTypeMetadata<VertexMetadata>> types, final Set<String> discriminators) {
+        final Vertex vertex = graph.addVertex(null);
+        for (final String discriminator : discriminators) {
+            vertex.setProperty(XO_DISCRIMINATORS_PROPERTY + discriminator, discriminator);
+        }
+        return vertex;
+    }
 
-	@Override
-	public void deleteEntity(Vertex entity) {
-		entity.remove();
-	}
+    @Override
+    public void deleteEntity(final Vertex entity) {
+        entity.remove();
+    }
 
-	@Override
-	public ResultIterator<Vertex> findEntity(EntityTypeMetadata<VertexMetadata> type, String discriminator, Object value) {
+    @Override
+    public ResultIterator<Vertex> findEntity(final EntityTypeMetadata<VertexMetadata> type, final String discriminator, final Object value) {
         GraphQuery query = graph.query();
         query = query.has(XO_DISCRIMINATORS_PROPERTY + discriminator);
 
@@ -139,39 +139,39 @@ public class OrientDbDatastoreSessionImpl implements OrientDbDatastoreSession<Or
                 // intentionally left empty
             }
         };
-	}
+    }
 
-	@Override
-	public <QL> ResultIterator<Map<String, Object>> executeQuery(QL query, Map<String, Object> parameters) {
-		return null;
-	}
+    @Override
+    public <QL> ResultIterator<Map<String, Object>> executeQuery(final QL query, final Map<String, Object> parameters) {
+        return null;
+    }
 
-	@Override
-	public void migrateEntity(Vertex entity, TypeMetadataSet<EntityTypeMetadata<VertexMetadata>> types,
-			Set<String> discriminators, TypeMetadataSet<EntityTypeMetadata<VertexMetadata>> targetTypes,
-			Set<String> targetDiscriminators) {
-	}
+    @Override
+    public void migrateEntity(final Vertex entity, final TypeMetadataSet<EntityTypeMetadata<VertexMetadata>> types,
+            final Set<String> discriminators, final TypeMetadataSet<EntityTypeMetadata<VertexMetadata>> targetTypes,
+            final Set<String> targetDiscriminators) {
+    }
 
-	@Override
-	public void flushEntity(Vertex entity) {
-	}
+    @Override
+    public void flushEntity(final Vertex entity) {
+    }
 
-	@Override
-	public void flushRelation(Edge relation) {
-	}
+    @Override
+    public void flushRelation(final Edge relation) {
+    }
 
-	@Override
-	public DatastorePropertyManager<Vertex, Edge, PropertyMetadata, EdgeMetadata> getDatastorePropertyManager() {
-		return new OrientDbPropertyManager();
-	}
+    @Override
+    public DatastorePropertyManager<Vertex, Edge, PropertyMetadata, EdgeMetadata> getDatastorePropertyManager() {
+        return new OrientDbPropertyManager();
+    }
 
-	@Override
-	public void close() {
-	}
+    @Override
+    public void close() {
+    }
 
-	@Override
-	public OrientGraph getGraph() {
-		return graph;
-	}
+    @Override
+    public OrientGraph getGraph() {
+        return graph;
+    }
 
 }

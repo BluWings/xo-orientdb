@@ -8,13 +8,13 @@ import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
 /**
- * 
+ *
  * @author Lars Martin - lars.martin@smb-tec.com
- * 
+ *
  */
 public interface OrientDbDatastoreSession<G extends OrientGraph> extends
-		DatastoreSession<Object, Vertex, VertexMetadata, String, Object, Edge, EdgeMetadata, String> {
+        DatastoreSession<Object, Vertex, VertexMetadata, String, Object, Edge, EdgeMetadata, String> {
 
-	G getGraph();
+    G getGraph();
 
 }

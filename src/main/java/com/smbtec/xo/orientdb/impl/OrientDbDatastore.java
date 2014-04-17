@@ -12,37 +12,37 @@ import com.smbtec.xo.orientdb.impl.metadata.VertexMetadata;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
 /**
- * 
+ *
  * @author Lars Martin - lars.martin@smb-tec.com
- * 
+ *
  */
 public class OrientDbDatastore implements
-		Datastore<OrientDbDatastoreSession<OrientGraph>, VertexMetadata, String, EdgeMetadata, String> {
+        Datastore<OrientDbDatastoreSession<OrientGraph>, VertexMetadata, String, EdgeMetadata, String> {
 
-	private OrientGraph graph;
+    private OrientGraph graph;
 
-	public OrientDbDatastore(URI uri) {
-		this.graph = new OrientGraph(uri.toString());
-	}
+    public OrientDbDatastore(final URI uri) {
+        this.graph = new OrientGraph(uri.toString());
+    }
 
-	@Override
-	public void init(Collection<TypeMetadata> registeredMetadata) {
-	}
+    @Override
+    public void init(final Collection<TypeMetadata> registeredMetadata) {
+    }
 
-	@Override
-	public DatastoreMetadataFactory<VertexMetadata, String, EdgeMetadata, String> getMetadataFactory() {
-		return new OrientDbMetadataFactory();
-	}
+    @Override
+    public DatastoreMetadataFactory<VertexMetadata, String, EdgeMetadata, String> getMetadataFactory() {
+        return new OrientDbMetadataFactory();
+    }
 
-	@Override
-	public OrientDbDatastoreSession<OrientGraph> createSession() {
-		return new OrientDbDatastoreSessionImpl(graph);
-	}
+    @Override
+    public OrientDbDatastoreSession<OrientGraph> createSession() {
+        return new OrientDbDatastoreSessionImpl(graph);
+    }
 
-	@Override
-	public void close() {
-		graph.shutdown();
-		graph = null;
-	}
+    @Override
+    public void close() {
+        graph.shutdown();
+        graph = null;
+    }
 
 }

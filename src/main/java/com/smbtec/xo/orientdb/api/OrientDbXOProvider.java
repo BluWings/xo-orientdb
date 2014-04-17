@@ -17,25 +17,25 @@ import com.smbtec.xo.orientdb.impl.metadata.VertexMetadata;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
 /**
- * 
+ *
  * @author Lars Martin - lars.martin@smb-tec.com
- * 
+ *
  */
 public class OrientDbXOProvider implements XODatastoreProvider<VertexMetadata, String, EdgeMetadata, String> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(OrientDbXOProvider.class);
+    private static final Logger LOG = LoggerFactory.getLogger(OrientDbXOProvider.class);
 
-	@Override
-	public Datastore<OrientDbDatastoreSession<OrientGraph>, VertexMetadata, String, EdgeMetadata, String> createDatastore(
-			final XOUnit xoUnit) {
-		if (xoUnit == null) {
-			throw new IllegalArgumentException("XOUnit must not be null");
-		}
-		URI uri = xoUnit.getUri();
-		if (uri == null) {
-			throw new XOException("No URI is specified for the store.");
-		}
-		return new OrientDbDatastore(uri);
-	}
+    @Override
+    public Datastore<OrientDbDatastoreSession<OrientGraph>, VertexMetadata, String, EdgeMetadata, String> createDatastore(
+            final XOUnit xoUnit) {
+        if (xoUnit == null) {
+            throw new IllegalArgumentException("XOUnit must not be null");
+        }
+        final URI uri = xoUnit.getUri();
+        if (uri == null) {
+            throw new XOException("No URI is specified for the store.");
+        }
+        return new OrientDbDatastore(uri);
+    }
 
 }

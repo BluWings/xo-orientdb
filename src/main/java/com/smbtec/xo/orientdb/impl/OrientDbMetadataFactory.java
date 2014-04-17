@@ -28,115 +28,115 @@ import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Element;
 
 /**
- * 
+ *
  * @author Lars Martin - lars.martin@smb-tec.com
  * @author Rick-Rainer Ludwig
- * 
+ *
  */
 public class OrientDbMetadataFactory implements DatastoreMetadataFactory<VertexMetadata, String, EdgeMetadata, String> {
 
-	@Override
-	public VertexMetadata createEntityMetadata(final AnnotatedType annotatedType,
-			final Map<Class<?>, TypeMetadata> metadataByType) {
-		final Vertex annotation = annotatedType.getAnnotation(Vertex.class);
-		String value = null;
-		IndexedPropertyMethodMetadata<?> indexedProperty = null;
-		if (annotation != null) {
-			value = annotation.value();
-			if ((value == null) || (value.isEmpty())) {
-				value = annotatedType.getName();
-			}
-			final Class<?> usingIndexOf = annotation.usingIndexedPropertyOf();
-			if (!Object.class.equals(usingIndexOf)) {
-				final TypeMetadata typeMetadata = metadataByType.get(usingIndexOf);
-				indexedProperty = typeMetadata.getIndexedProperty();
-			}
-		}
-		return new VertexMetadata(value, indexedProperty);
-	}
+    @Override
+    public VertexMetadata createEntityMetadata(final AnnotatedType annotatedType,
+            final Map<Class<?>, TypeMetadata> metadataByType) {
+        final Vertex annotation = annotatedType.getAnnotation(Vertex.class);
+        String value = null;
+        IndexedPropertyMethodMetadata<?> indexedProperty = null;
+        if (annotation != null) {
+            value = annotation.value();
+            if ((value == null) || (value.isEmpty())) {
+                value = annotatedType.getName();
+            }
+            final Class<?> usingIndexOf = annotation.usingIndexedPropertyOf();
+            if (!Object.class.equals(usingIndexOf)) {
+                final TypeMetadata typeMetadata = metadataByType.get(usingIndexOf);
+                indexedProperty = typeMetadata.getIndexedProperty();
+            }
+        }
+        return new VertexMetadata(value, indexedProperty);
+    }
 
-	@Override
-	public <ImplementedByMetadata> ImplementedByMetadata createImplementedByMetadata(
-			final AnnotatedMethod annotatedMethod) {
-		return null;
-	}
+    @Override
+    public <ImplementedByMetadata> ImplementedByMetadata createImplementedByMetadata(
+            final AnnotatedMethod annotatedMethod) {
+        return null;
+    }
 
-	@Override
-	public CollectionPropertyMetadata createCollectionPropertyMetadata(final PropertyMethod propertyMethod) {
-		final String name = determinePropertyName(propertyMethod);
-		final Direction direction = determineEdgeDirection(propertyMethod);
-		return new CollectionPropertyMetadata(name, direction);
-	}
+    @Override
+    public CollectionPropertyMetadata createCollectionPropertyMetadata(final PropertyMethod propertyMethod) {
+        final String name = determinePropertyName(propertyMethod);
+        final Direction direction = determineEdgeDirection(propertyMethod);
+        return new CollectionPropertyMetadata(name, direction);
+    }
 
-	@Override
-	public ReferencePropertyMetadata createReferencePropertyMetadata(final PropertyMethod propertyMethod) {
-		final String name = determinePropertyName(propertyMethod);
-		final Direction direction = determineEdgeDirection(propertyMethod);
-		return new ReferencePropertyMetadata(name, direction);
-	}
+    @Override
+    public ReferencePropertyMetadata createReferencePropertyMetadata(final PropertyMethod propertyMethod) {
+        final String name = determinePropertyName(propertyMethod);
+        final Direction direction = determineEdgeDirection(propertyMethod);
+        return new ReferencePropertyMetadata(name, direction);
+    }
 
-	@Override
-	public PropertyMetadata createPropertyMetadata(final PropertyMethod propertyMethod) {
-		final Property property = propertyMethod.getAnnotationOfProperty(Property.class);
-		final String name = property != null ? property.value() : propertyMethod.getName();
-		return new PropertyMetadata(name);
-	}
+    @Override
+    public PropertyMetadata createPropertyMetadata(final PropertyMethod propertyMethod) {
+        final Property property = propertyMethod.getAnnotationOfProperty(Property.class);
+        final String name = property != null ? property.value() : propertyMethod.getName();
+        return new PropertyMetadata(name);
+    }
 
-	@Override
-	public IndexedPropertyMetadata createIndexedPropertyMetadata(final PropertyMethod propertyMethod) {
-		final String name = propertyMethod.getName();
-		final Class<?> declaringClass = propertyMethod.getAnnotatedElement().getDeclaringClass();
-		Class<? extends Element> type = null;
-		if (declaringClass.getAnnotation(Vertex.class) != null) {
-			type = com.tinkerpop.blueprints.Vertex.class;
-		} else if (declaringClass.getAnnotation(Edge.class) != null) {
-			type = com.tinkerpop.blueprints.Edge.class;
-		} else {
-			throw new XOException("Property '" + name
-					+ "' was found with index annotation, but the declaring type is neither a vertex nor an edge.");
-		}
-		final Indexed indexedAnnotation = propertyMethod.getAnnotation(Indexed.class);
-		final boolean unique = indexedAnnotation.unique();
-		final Class<?> dataType = propertyMethod.getType();
-		return new IndexedPropertyMetadata(name, unique, dataType, type);
-	}
+    @Override
+    public IndexedPropertyMetadata createIndexedPropertyMetadata(final PropertyMethod propertyMethod) {
+        final String name = propertyMethod.getName();
+        final Class<?> declaringClass = propertyMethod.getAnnotatedElement().getDeclaringClass();
+        Class<? extends Element> type = null;
+        if (declaringClass.getAnnotation(Vertex.class) != null) {
+            type = com.tinkerpop.blueprints.Vertex.class;
+        } else if (declaringClass.getAnnotation(Edge.class) != null) {
+            type = com.tinkerpop.blueprints.Edge.class;
+        } else {
+            throw new XOException("Property '" + name
+                    + "' was found with index annotation, but the declaring type is neither a vertex nor an edge.");
+        }
+        final Indexed indexedAnnotation = propertyMethod.getAnnotation(Indexed.class);
+        final boolean unique = indexedAnnotation.unique();
+        final Class<?> dataType = propertyMethod.getType();
+        return new IndexedPropertyMetadata(name, unique, dataType, type);
+    }
 
-	@Override
-	public EdgeMetadata createRelationMetadata(final AnnotatedElement<?> annotatedElement,
-			final Map<Class<?>, TypeMetadata> metadataByType) {
-		Edge relationAnnotation;
-		if (annotatedElement instanceof PropertyMethod) {
-			relationAnnotation = ((PropertyMethod) annotatedElement).getAnnotationOfProperty(Edge.class);
-		} else {
-			relationAnnotation = annotatedElement.getAnnotation(Edge.class);
-		}
-		String name = null;
-		if (relationAnnotation != null) {
-			final String value = relationAnnotation.value();
-			if (!Edge.DEFAULT_VALUE.equals(value)) {
-				name = value;
-			}
-		}
-		if (name == null) {
-			name = StringUtils.uncapitalize(annotatedElement.getName());
-		}
-		return new EdgeMetadata(name);
-	}
+    @Override
+    public EdgeMetadata createRelationMetadata(final AnnotatedElement<?> annotatedElement,
+            final Map<Class<?>, TypeMetadata> metadataByType) {
+        Edge relationAnnotation;
+        if (annotatedElement instanceof PropertyMethod) {
+            relationAnnotation = ((PropertyMethod) annotatedElement).getAnnotationOfProperty(Edge.class);
+        } else {
+            relationAnnotation = annotatedElement.getAnnotation(Edge.class);
+        }
+        String name = null;
+        if (relationAnnotation != null) {
+            final String value = relationAnnotation.value();
+            if (!Edge.DEFAULT_VALUE.equals(value)) {
+                name = value;
+            }
+        }
+        if (name == null) {
+            name = StringUtils.uncapitalize(annotatedElement.getName());
+        }
+        return new EdgeMetadata(name);
+    }
 
-	private String determinePropertyName(final PropertyMethod propertyMethod) {
-		final Vertex property = propertyMethod.getAnnotationOfProperty(Vertex.class);
-		return property != null ? property.value() : propertyMethod.getName();
-	}
+    private String determinePropertyName(final PropertyMethod propertyMethod) {
+        final Vertex property = propertyMethod.getAnnotationOfProperty(Vertex.class);
+        return property != null ? property.value() : propertyMethod.getName();
+    }
 
-	private Direction determineEdgeDirection(final PropertyMethod propertyMethod) {
-		final Outgoing outgoingAnnotation = propertyMethod.getAnnotation(Outgoing.class);
-		final Incoming incomingAnnotation = propertyMethod.getAnnotation(Incoming.class);
-		if ((outgoingAnnotation != null) && (incomingAnnotation != null)) {
-			return Direction.BOTH;
-		} else if (incomingAnnotation != null) {
-			return Direction.IN;
-		} else {
-			return Direction.OUT;
-		}
-	}
+    private Direction determineEdgeDirection(final PropertyMethod propertyMethod) {
+        final Outgoing outgoingAnnotation = propertyMethod.getAnnotation(Outgoing.class);
+        final Incoming incomingAnnotation = propertyMethod.getAnnotation(Incoming.class);
+        if ((outgoingAnnotation != null) && (incomingAnnotation != null)) {
+            return Direction.BOTH;
+        } else if (incomingAnnotation != null) {
+            return Direction.IN;
+        } else {
+            return Direction.OUT;
+        }
+    }
 }
