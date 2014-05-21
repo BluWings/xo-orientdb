@@ -1,19 +1,21 @@
 package com.smbtec.xo.orientdb.impl;
 
+import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 import com.buschmais.xo.api.ResultIterator;
 import com.buschmais.xo.api.XOException;
 import com.buschmais.xo.spi.datastore.DatastorePropertyManager;
+import com.buschmais.xo.spi.datastore.DatastoreQuery;
 import com.buschmais.xo.spi.datastore.DatastoreTransaction;
 import com.buschmais.xo.spi.datastore.TypeMetadataSet;
 import com.buschmais.xo.spi.metadata.method.IndexedPropertyMethodMetadata;
 import com.buschmais.xo.spi.metadata.method.PrimitivePropertyMethodMetadata;
 import com.buschmais.xo.spi.metadata.type.EntityTypeMetadata;
 import com.smbtec.xo.orientdb.api.OrientDbDatastoreSession;
+import com.smbtec.xo.orientdb.api.annotation.OSQL;
 import com.smbtec.xo.orientdb.impl.metadata.EdgeMetadata;
 import com.smbtec.xo.orientdb.impl.metadata.PropertyMetadata;
 import com.smbtec.xo.orientdb.impl.metadata.VertexMetadata;
@@ -142,11 +144,6 @@ public class OrientDbDatastoreSessionImpl implements OrientDbDatastoreSession<Or
     }
 
     @Override
-    public <QL> ResultIterator<Map<String, Object>> executeQuery(final QL query, final Map<String, Object> parameters) {
-        return null;
-    }
-
-    @Override
     public void migrateEntity(final Vertex entity, final TypeMetadataSet<EntityTypeMetadata<VertexMetadata>> types,
             final Set<String> discriminators, final TypeMetadataSet<EntityTypeMetadata<VertexMetadata>> targetTypes,
             final Set<String> targetDiscriminators) {
@@ -172,6 +169,19 @@ public class OrientDbDatastoreSessionImpl implements OrientDbDatastoreSession<Or
     @Override
     public OrientGraph getGraph() {
         return graph;
+    }
+
+    @Override
+    public Class<? extends Annotation> getDefaultQueryLanguage() {
+        return OSQL.class;
+    }
+
+    @Override
+    public <QL extends Annotation> DatastoreQuery<QL> createQuery(Class<QL> queryLanguage) {
+        if (OSQL.class.equals(queryLanguage)) {
+            return (DatastoreQuery<QL>) new OSQLQuery(this);
+        }
+        throw new XOException("Unsupported query language: " + queryLanguage.getName());
     }
 
 }
