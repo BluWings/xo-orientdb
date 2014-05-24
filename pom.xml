@@ -215,6 +215,10 @@
 					<artifactId>blueprints-core</artifactId>
 					<groupId>com.tinkerpop.blueprints</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>gremlin-java</artifactId>
+					<groupId>com.tinkerpop.gremlin</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<!-- test dependencies -->
