@@ -186,6 +186,11 @@
 			<artifactId>xo.impl</artifactId>
 			<version>${com.buschmais.xo_version}</version>
 		</dependency>
+        <dependency>
+            <groupId>com.smb-tec.xo</groupId>
+            <artifactId>xo-tinkerpop-blueprints</artifactId>
+            <version>0.0.2-SNAPSHOT</version>
+        </dependency>
 		<!-- OrientDB API -->
 		<dependency>
 			<groupId>com.orientechnologies</groupId>
@@ -198,11 +203,6 @@
 			<version>1.7-rc2</version>
 		</dependency>
 		<dependency>
-			<groupId>com.tinkerpop.blueprints</groupId>
-			<artifactId>blueprints-core</artifactId>
-			<version>${com.tinkerpop.blueprints_version}</version>
-		</dependency>
-		<dependency>
 			<groupId>com.orientechnologies</groupId>
 			<artifactId>orientdb-graphdb</artifactId>
 			<version>1.7-rc2</version>
@@ -211,22 +211,11 @@
 					<groupId>com.orientechnologies</groupId>
 					<artifactId>orientdb-object</artifactId>
 				</exclusion>
+				<exclusion>
+					<artifactId>blueprints-core</artifactId>
+					<groupId>com.tinkerpop.blueprints</groupId>
+				</exclusion>
 			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>com.tinkerpop</groupId>
-			<artifactId>pipes</artifactId>
-			<version>${com.tinkerpop.blueprints_version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.tinkerpop.gremlin</groupId>
-			<artifactId>gremlin-groovy</artifactId>
-			<version>${com.tinkerpop.blueprints_version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.tinkerpop.blueprints</groupId>
-			<artifactId>blueprints-orient-graph</artifactId>
-			<version>${com.tinkerpop.blueprints_version}</version>
 		</dependency>
 		<!-- test dependencies -->
 		<dependency>
@@ -258,11 +247,6 @@
 			<version>5.1.0.Final</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.smb-tec.xo</groupId>
-			<artifactId>xo-tinkerpop-blueprints</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 
 	<name>eXtended Objects - OrientDB Binding</name>
@@ -272,7 +256,6 @@
 	<version>0.0.1-SNAPSHOT</version>
 
 	<properties>
-		<com.tinkerpop.blueprints_version>2.5.0-SNAPSHOT</com.tinkerpop.blueprints_version>
 		<com.buschmais.xo_version>0.4.0-SNAPSHOT</com.buschmais.xo_version>
 		<bundle.name>com.smb-tec.xo.${project.artifactId}</bundle.name>
 	</properties>

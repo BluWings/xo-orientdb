@@ -8,6 +8,7 @@ import com.smbtec.xo.orientdb.test.demo.composite.Person;
 
 import org.hamcrest.Matchers;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -16,12 +17,13 @@ import java.net.URISyntaxException;
 import java.util.Collection;
 
 /**
- * 
+ *
  * @author Lars Martin - lars.martin@smb-tec.com
  * @author Dirk Mahler
- * 
+ *
  */
 @RunWith(Parameterized.class)
+@Ignore
 public class IndexedDemoTest extends AbstractOrientDbXOManagerTest {
 
 	public IndexedDemoTest(XOUnit xoUnit) {

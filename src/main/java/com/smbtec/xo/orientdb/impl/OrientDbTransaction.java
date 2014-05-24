@@ -4,6 +4,11 @@ import com.buschmais.xo.api.XOException;
 import com.buschmais.xo.spi.datastore.DatastoreTransaction;
 import com.tinkerpop.blueprints.TransactionalGraph;
 
+/**
+ *
+ * @author Lars Martin - lars.martin@smb-tec.com
+ *
+ */
 public class OrientDbTransaction implements DatastoreTransaction {
 
     private boolean active = false;

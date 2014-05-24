@@ -2,10 +2,13 @@ package com.smbtec.xo.orientdb.api;
 
 import com.buschmais.xo.spi.datastore.DatastoreSession;
 import com.smbtec.xo.orientdb.impl.metadata.EdgeMetadata;
+import com.smbtec.xo.orientdb.impl.metadata.PropertyMetadata;
 import com.smbtec.xo.orientdb.impl.metadata.VertexMetadata;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientEdge;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 /**
  *
@@ -13,7 +16,7 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraph;
  *
  */
 public interface OrientDbDatastoreSession<G extends OrientGraph> extends
-        DatastoreSession<Object, Vertex, VertexMetadata, String, Object, Edge, EdgeMetadata, String> {
+        DatastoreSession<Object, OrientVertex, VertexMetadata, String, Object, OrientEdge, EdgeMetadata, String, PropertyMetadata> {
 
     G getGraph();
 

@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Collections;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -22,6 +23,7 @@ import com.smbtec.xo.orientdb.test.validation.composite.A;
 import com.smbtec.xo.orientdb.test.validation.composite.B;
 
 @RunWith(Parameterized.class)
+@Ignore
 public class ValidationModeNoneTest extends AbstractOrientDbXOManagerTest {
 
     public ValidationModeNoneTest(final XOUnit xoUnit) {

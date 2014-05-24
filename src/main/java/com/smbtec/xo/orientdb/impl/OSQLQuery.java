@@ -7,6 +7,11 @@ import com.buschmais.xo.spi.datastore.DatastoreQuery;
 import com.smbtec.xo.orientdb.api.OrientDbDatastoreSession;
 import com.smbtec.xo.orientdb.api.annotation.OSQL;
 
+/**
+ *
+ * @author Lars Martin - lars.martin@smb-tec.com
+ *
+ */
 public class OSQLQuery implements DatastoreQuery<OSQL> {
 
     public OSQLQuery(OrientDbDatastoreSession<?> session) {
