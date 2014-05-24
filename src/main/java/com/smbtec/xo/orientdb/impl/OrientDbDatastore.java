@@ -6,9 +6,11 @@ import java.util.Collection;
 import com.buschmais.xo.spi.datastore.Datastore;
 import com.buschmais.xo.spi.datastore.DatastoreMetadataFactory;
 import com.buschmais.xo.spi.metadata.type.TypeMetadata;
+
 import com.smbtec.xo.orientdb.api.OrientDbDatastoreSession;
 import com.smbtec.xo.orientdb.impl.metadata.EdgeMetadata;
 import com.smbtec.xo.orientdb.impl.metadata.VertexMetadata;
+
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
 /**

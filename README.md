@@ -15,7 +15,7 @@ You'll need to add the following dependency in your builds (and Maven will autom
 	  	<artifactId>xo-orientdb</artifactId>
 	  	<version>0.0.1-SNAPSHOT</version>
 	</dependency>
-	
+
 Getting Started
 ---------------
 

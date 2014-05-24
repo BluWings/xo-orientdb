@@ -16,7 +16,7 @@ import com.tinkerpop.blueprints.impls.orient.OrientVertex;
  *
  */
 public interface OrientDbDatastoreSession<G extends OrientGraph> extends
-        DatastoreSession<Object, OrientVertex, VertexMetadata, String, Object, OrientEdge, EdgeMetadata, String, PropertyMetadata> {
+        DatastoreSession<Object, Vertex, VertexMetadata, String, Object, Edge, EdgeMetadata, String, PropertyMetadata> {
 
     G getGraph();
 

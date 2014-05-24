@@ -2,23 +2,18 @@ package com.smbtec.xo.orientdb.test;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Properties;
 
 import com.buschmais.xo.api.ConcurrencyMode;
 import com.buschmais.xo.api.Transaction;
 import com.buschmais.xo.api.ValidationMode;
 import com.buschmais.xo.api.bootstrap.XOUnit;
-import com.buschmais.xo.spi.interceptor.XOInterceptor;
 import com.buschmais.xo.test.AbstractXOManagerTest;
 import com.smbtec.xo.orientdb.api.OrientDbDatastoreSession;
 import com.smbtec.xo.orientdb.api.OrientDbXOProvider;
-import com.smbtec.xo.tinkerpop.blueprints.api.TinkerPopXOProvider;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
 
@@ -38,14 +33,14 @@ public abstract class AbstractOrientDbXOManagerTest extends AbstractXOManagerTes
     }
 
     protected static Collection<Object[]> xoUnits(final Class<?>... types) {
-        return xoUnits(Arrays.asList(MEMORY), Arrays.asList(types), Collections.<Class<?>> emptyList(), ValidationMode.AUTO,
+        return xoUnits(Arrays.asList(MEMORY, PLOCAL), Arrays.asList(types), Collections.<Class<?>> emptyList(), ValidationMode.AUTO,
                 ConcurrencyMode.SINGLETHREADED, Transaction.TransactionAttribute.NONE);
     }
 
     protected static Collection<Object[]> xoUnits(final List<? extends Class<?>> types, final List<? extends Class<?>> instanceListenerTypes,
             final ValidationMode validationMode, final ConcurrencyMode concurrencyMode, final Transaction.TransactionAttribute transactionAttribute)
             throws URISyntaxException {
-        return xoUnits(Arrays.asList(MEMORY), types, instanceListenerTypes, validationMode, concurrencyMode, transactionAttribute);
+        return xoUnits(Arrays.asList(MEMORY, PLOCAL), types, instanceListenerTypes, validationMode, concurrencyMode, transactionAttribute);
     }
 
     @Override

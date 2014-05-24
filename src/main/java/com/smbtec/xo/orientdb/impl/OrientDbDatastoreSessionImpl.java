@@ -7,14 +7,16 @@ import com.buschmais.xo.spi.datastore.DatastoreEntityManager;
 import com.buschmais.xo.spi.datastore.DatastoreQuery;
 import com.buschmais.xo.spi.datastore.DatastoreRelationManager;
 import com.buschmais.xo.spi.datastore.DatastoreTransaction;
+
 import com.smbtec.xo.orientdb.api.OrientDbDatastoreSession;
 import com.smbtec.xo.orientdb.api.annotation.OSQL;
 import com.smbtec.xo.orientdb.impl.metadata.EdgeMetadata;
 import com.smbtec.xo.orientdb.impl.metadata.PropertyMetadata;
 import com.smbtec.xo.orientdb.impl.metadata.VertexMetadata;
-import com.tinkerpop.blueprints.impls.orient.OrientEdge;
+
+import com.tinkerpop.blueprints.Edge;
+import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
-import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 /**
  *
@@ -39,12 +41,12 @@ public class OrientDbDatastoreSessionImpl implements OrientDbDatastoreSession<Or
     }
 
     @Override
-    public DatastoreEntityManager<Object, OrientVertex, VertexMetadata, String, PropertyMetadata> getDatastoreEntityManager() {
+    public DatastoreEntityManager<Object, Vertex, VertexMetadata, String, PropertyMetadata> getDatastoreEntityManager() {
         return vertexManager;
     }
 
     @Override
-    public DatastoreRelationManager<OrientVertex, Object, OrientEdge, EdgeMetadata, String, PropertyMetadata> getDatastoreRelationManager() {
+    public DatastoreRelationManager<Vertex, Object, Edge, EdgeMetadata, String, PropertyMetadata> getDatastoreRelationManager() {
         return edgeManager;
     }
 

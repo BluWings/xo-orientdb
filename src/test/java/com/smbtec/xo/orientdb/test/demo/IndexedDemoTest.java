@@ -1,20 +1,19 @@
 package com.smbtec.xo.orientdb.test.demo;
 
+import java.net.URISyntaxException;
+import java.util.Collection;
+
+import org.hamcrest.Matchers;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+
 import com.buschmais.xo.api.XOManager;
 import com.buschmais.xo.api.bootstrap.XOUnit;
 import com.smbtec.xo.orientdb.test.AbstractOrientDbXOManagerTest;
 import com.smbtec.xo.orientdb.test.demo.composite.Group;
 import com.smbtec.xo.orientdb.test.demo.composite.Person;
-
-import org.hamcrest.Matchers;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-
-import java.net.URISyntaxException;
-import java.util.Collection;
 
 /**
  *
@@ -23,7 +22,6 @@ import java.util.Collection;
  *
  */
 @RunWith(Parameterized.class)
-@Ignore
 public class IndexedDemoTest extends AbstractOrientDbXOManagerTest {
 
 	public IndexedDemoTest(XOUnit xoUnit) {

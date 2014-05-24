@@ -7,7 +7,6 @@ import java.net.URISyntaxException;
 import java.util.Collection;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -26,7 +25,6 @@ import com.smbtec.xo.tinkerpop.blueprints.api.annotation.Vertex;
  *
  */
 @RunWith(Parameterized.class)
-@Ignore
 public class CrudTest extends AbstractOrientDbXOManagerTest {
 
 	public CrudTest(final XOUnit xoUnit) {
