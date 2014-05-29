@@ -130,12 +130,12 @@ public class OrientDbEdgeManager extends AbstractOrientDbPropertyManager<Edge> i
 
     @Override
     public Vertex getFrom(final Edge relation) {
-        return relation.getVertex(com.tinkerpop.blueprints.Direction.IN);
+        return relation.getVertex(com.tinkerpop.blueprints.Direction.OUT);
     }
 
     @Override
     public Vertex getTo(final Edge relation) {
-        return relation.getVertex(com.tinkerpop.blueprints.Direction.OUT);
+        return relation.getVertex(com.tinkerpop.blueprints.Direction.IN);
     }
 
 }

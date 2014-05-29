@@ -23,7 +23,7 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraph;
  */
 public class OrientDbXOProvider implements XODatastoreProvider<VertexMetadata, String, EdgeMetadata, String> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OrientDbXOProvider.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrientDbXOProvider.class);
 
     @Override
     public Datastore<OrientDbDatastoreSession<OrientGraph>, VertexMetadata, String, EdgeMetadata, String> createDatastore(

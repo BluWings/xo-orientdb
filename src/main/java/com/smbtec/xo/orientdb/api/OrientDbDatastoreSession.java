@@ -6,9 +6,7 @@ import com.smbtec.xo.orientdb.impl.metadata.PropertyMetadata;
 import com.smbtec.xo.orientdb.impl.metadata.VertexMetadata;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
-import com.tinkerpop.blueprints.impls.orient.OrientEdge;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
-import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 /**
  *
