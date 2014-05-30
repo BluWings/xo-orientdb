@@ -24,25 +24,25 @@ import com.smbtec.xo.orientdb.test.demo.composite.Person;
 @RunWith(Parameterized.class)
 public class IndexedDemoTest extends AbstractOrientDbXOManagerTest {
 
-	public IndexedDemoTest(XOUnit xoUnit) {
-		super(xoUnit);
-	}
+    public IndexedDemoTest(XOUnit xoUnit) {
+        super(xoUnit);
+    }
 
-	@Parameterized.Parameters
-	public static Collection<Object[]> getXOUnits() throws URISyntaxException {
-		return xoUnits(Group.class, Person.class);
-	}
+    @Parameterized.Parameters
+    public static Collection<Object[]> getXOUnits() throws URISyntaxException {
+        return xoUnits(Group.class, Person.class);
+    }
 
-	@Test
-	public void test() {
-		XOManager xoManager = getXoManager();
-		xoManager.currentTransaction().begin();
-		Person person1 = xoManager.create(Person.class);
-		person1.setName("Peter");
-		xoManager.currentTransaction().commit();
-		xoManager.currentTransaction().begin();
-		Person person2 = xoManager.find(Person.class, "Peter").getSingleResult();
-		Assert.assertThat(person2, Matchers.equalTo(person1));
-		xoManager.currentTransaction().commit();
-	}
+    @Test
+    public void test() {
+        XOManager xoManager = getXoManager();
+        xoManager.currentTransaction().begin();
+        Person person1 = xoManager.create(Person.class);
+        person1.setName("Peter");
+        xoManager.currentTransaction().commit();
+        xoManager.currentTransaction().begin();
+        Person person2 = xoManager.find(Person.class, "Peter").getSingleResult();
+        Assert.assertThat(person2, Matchers.equalTo(person1));
+        xoManager.currentTransaction().commit();
+    }
 }

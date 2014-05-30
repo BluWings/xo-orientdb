@@ -27,47 +27,47 @@ import com.smbtec.xo.tinkerpop.blueprints.api.annotation.Vertex;
 @RunWith(Parameterized.class)
 public class CrudTest extends AbstractOrientDbXOManagerTest {
 
-	public CrudTest(final XOUnit xoUnit) {
-		super(xoUnit);
-	}
+    public CrudTest(final XOUnit xoUnit) {
+        super(xoUnit);
+    }
 
-	@Parameterized.Parameters
-	public static Collection<Object[]> getXOUnits() throws URISyntaxException {
-		return xoUnits(A.class);
-	}
+    @Parameterized.Parameters
+    public static Collection<Object[]> getXOUnits() throws URISyntaxException {
+        return xoUnits(A.class);
+    }
 
-	@Test
-	public void create() {
-		final XOManager xoManager = getXoManager();
-		xoManager.currentTransaction().begin();
-		A a = xoManager.create(A.class);
-		a.setName("Foo");
-		xoManager.currentTransaction().commit();
-		xoManager.currentTransaction().begin();
-		a = xoManager.find(A.class, "Foo").getSingleResult();
-		assertThat(a.getName(), equalTo("Foo"));
-		a.setName("Bar");
-		xoManager.currentTransaction().commit();
-		xoManager.currentTransaction().begin();
-		xoManager.delete(a);
-		xoManager.currentTransaction().commit();
-		xoManager.currentTransaction().begin();
-		try {
-			xoManager.find(A.class, "Bar").getSingleResult();
-			Assert.fail("An exception is expected.");
-		} catch (final XOException e) {
-		}
-		xoManager.currentTransaction().commit();
-	}
+    @Test
+    public void create() {
+        final XOManager xoManager = getXoManager();
+        xoManager.currentTransaction().begin();
+        A a = xoManager.create(A.class);
+        a.setName("Foo");
+        xoManager.currentTransaction().commit();
+        xoManager.currentTransaction().begin();
+        a = xoManager.find(A.class, "Foo").getSingleResult();
+        assertThat(a.getName(), equalTo("Foo"));
+        a.setName("Bar");
+        xoManager.currentTransaction().commit();
+        xoManager.currentTransaction().begin();
+        xoManager.delete(a);
+        xoManager.currentTransaction().commit();
+        xoManager.currentTransaction().begin();
+        try {
+            xoManager.find(A.class, "Bar").getSingleResult();
+            Assert.fail("An exception is expected.");
+        } catch (final XOException e) {
+        }
+        xoManager.currentTransaction().commit();
+    }
 
-	@Vertex("A")
-	public interface A {
+    @Vertex("A")
+    public interface A {
 
-		@Indexed
-		String getName();
+        @Indexed
+        String getName();
 
-		void setName(String name);
+        void setName(String name);
 
-	}
+    }
 
 }
