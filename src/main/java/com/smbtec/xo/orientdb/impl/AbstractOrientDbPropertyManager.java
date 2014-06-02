@@ -1,10 +1,12 @@
 package com.smbtec.xo.orientdb.impl;
 
+import java.util.Map;
+
 import com.buschmais.xo.spi.datastore.DatastorePropertyManager;
 import com.buschmais.xo.spi.metadata.method.PrimitivePropertyMethodMetadata;
 import com.smbtec.xo.orientdb.impl.metadata.PropertyMetadata;
 import com.tinkerpop.blueprints.Element;
-
+import com.tinkerpop.blueprints.impls.orient.OrientElement;
 
 /**
  *
@@ -31,6 +33,10 @@ public class AbstractOrientDbPropertyManager<E extends Element> implements Datas
     @Override
     public Object getProperty(E element, PrimitivePropertyMethodMetadata<PropertyMetadata> metadata) {
         return element.getProperty(metadata.getDatastoreMetadata().getName());
+    }
+
+    public void setProperties(E element, Map<String, Object> properties) {
+        ((OrientElement) element).setProperties(properties);
     }
 
 }

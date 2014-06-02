@@ -1,5 +1,6 @@
 package com.smbtec.xo.orientdb.impl;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -64,11 +65,10 @@ public class OrientDbVertexManager extends AbstractOrientDbPropertyManager<Verte
     }
 
     @Override
-    public Vertex createEntity(TypeMetadataSet<EntityTypeMetadata<VertexMetadata>> types, Set<String> discriminators) {
-        Vertex vertex = graph.addVertex(null);
-        for (final String discriminator : discriminators) {
-            vertex.setProperty(XO_DISCRIMINATORS_PROPERTY + discriminator, discriminator);
-        }
+    public Vertex createEntity(TypeMetadataSet<EntityTypeMetadata<VertexMetadata>> types, Set<String> discriminators,
+            Map<PrimitivePropertyMethodMetadata<PropertyMetadata>, Object> exampleEntity) {
+        final Vertex vertex = graph.addVertex(null);
+        setProperties(vertex, getProperties(discriminators, exampleEntity));
         return vertex;
     }
 
@@ -134,6 +134,18 @@ public class OrientDbVertexManager extends AbstractOrientDbPropertyManager<Verte
     @Override
     public void flushEntity(Vertex entity) {
         // intentionally left blank
+    }
+
+    private Map<String, Object> getProperties(Set<String> discriminators, Map<PrimitivePropertyMethodMetadata<PropertyMetadata>, Object> exampleEntity) {
+        Map<String, Object> properties = new HashMap<String, Object>();
+        for (final String discriminator : discriminators) {
+            properties.put(XO_DISCRIMINATORS_PROPERTY + discriminator, discriminator);
+        }
+        for (Map.Entry<PrimitivePropertyMethodMetadata<PropertyMetadata>, Object> entry : exampleEntity.entrySet()) {
+            properties.put(entry.getKey().getDatastoreMetadata().getName(), entry.getValue());
+        }
+        return properties;
+
     }
 
 }
