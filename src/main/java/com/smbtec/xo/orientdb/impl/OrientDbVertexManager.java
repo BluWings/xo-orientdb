@@ -13,8 +13,10 @@ import com.buschmais.xo.spi.datastore.TypeMetadataSet;
 import com.buschmais.xo.spi.metadata.method.IndexedPropertyMethodMetadata;
 import com.buschmais.xo.spi.metadata.method.PrimitivePropertyMethodMetadata;
 import com.buschmais.xo.spi.metadata.type.EntityTypeMetadata;
+
 import com.smbtec.xo.orientdb.impl.metadata.PropertyMetadata;
 import com.smbtec.xo.orientdb.impl.metadata.VertexMetadata;
+
 import com.tinkerpop.blueprints.GraphQuery;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
@@ -25,8 +27,8 @@ import com.tinkerpop.blueprints.impls.orient.OrientVertex;
  * @author Lars Martin - lars.martin@smb-tec.com
  *
  */
-public class OrientDbVertexManager extends AbstractOrientDbPropertyManager<Vertex> implements
-        DatastoreEntityManager<Object, Vertex, VertexMetadata, String, PropertyMetadata> {
+public class OrientDbVertexManager extends AbstractOrientDbPropertyManager<OrientVertex> implements
+        DatastoreEntityManager<Object, OrientVertex, VertexMetadata, String, PropertyMetadata> {
 
     /**
      * This constant contains the prefix for discriminator properties.
@@ -45,7 +47,7 @@ public class OrientDbVertexManager extends AbstractOrientDbPropertyManager<Verte
     }
 
     @Override
-    public Set<String> getEntityDiscriminators(Vertex entity) {
+    public Set<String> getEntityDiscriminators(OrientVertex entity) {
         final Set<String> discriminators = new HashSet<>();
         for (final String key : entity.getPropertyKeys()) {
             if (key.startsWith(XO_DISCRIMINATORS_PROPERTY)) {
@@ -54,41 +56,45 @@ public class OrientDbVertexManager extends AbstractOrientDbPropertyManager<Verte
             }
         }
         if (discriminators.isEmpty()) {
-            throw new XOException("A vertex was found without discriminators. Does another framework alter the database?");
+            throw new XOException(
+                    "A vertex was found without discriminators. Does another framework alter the database?");
         }
         return discriminators;
     }
 
     @Override
-    public Object getEntityId(Vertex entity) {
+    public Object getEntityId(OrientVertex entity) {
         return entity.getId();
     }
 
     @Override
-    public Vertex createEntity(TypeMetadataSet<EntityTypeMetadata<VertexMetadata>> types, Set<String> discriminators,
-            Map<PrimitivePropertyMethodMetadata<PropertyMetadata>, Object> exampleEntity) {
-        final Vertex vertex = graph.addVertex(null);
+    public OrientVertex createEntity(TypeMetadataSet<EntityTypeMetadata<VertexMetadata>> types,
+            Set<String> discriminators, Map<PrimitivePropertyMethodMetadata<PropertyMetadata>, Object> exampleEntity) {
+        final OrientVertex vertex = graph.addVertex(null);
         setProperties(vertex, getProperties(discriminators, exampleEntity));
         return vertex;
     }
 
     @Override
-    public void deleteEntity(Vertex entity) {
+    public void deleteEntity(OrientVertex entity) {
         entity.remove();
     }
 
     @Override
-    public ResultIterator<Vertex> findEntity(EntityTypeMetadata<VertexMetadata> entityTypeMetadata, String discriminator,
-            Map<PrimitivePropertyMethodMetadata<PropertyMetadata>, Object> values) {
+    public ResultIterator<OrientVertex> findEntity(EntityTypeMetadata<VertexMetadata> entityTypeMetadata,
+            String discriminator, Map<PrimitivePropertyMethodMetadata<PropertyMetadata>, Object> values) {
         if (values.size() > 1) {
             throw new XOException("Only one property value is supported for find operation");
         }
-        Map.Entry<PrimitivePropertyMethodMetadata<PropertyMetadata>, Object> entry = values.entrySet().iterator().next();
+        Map.Entry<PrimitivePropertyMethodMetadata<PropertyMetadata>, Object> entry = values.entrySet().iterator()
+                .next();
         PrimitivePropertyMethodMetadata<PropertyMetadata> propertyMethodMetadata = entry.getKey();
         if (propertyMethodMetadata == null) {
-            IndexedPropertyMethodMetadata<?> indexedProperty = entityTypeMetadata.getDatastoreMetadata().getIndexedProperty();
+            IndexedPropertyMethodMetadata<?> indexedProperty = entityTypeMetadata.getDatastoreMetadata()
+                    .getIndexedProperty();
             if (indexedProperty == null) {
-                throw new XOException("Type " + entityTypeMetadata.getAnnotatedType().getAnnotatedElement().getName() + " has no indexed property.");
+                throw new XOException("Type " + entityTypeMetadata.getAnnotatedType().getAnnotatedElement().getName()
+                        + " has no indexed property.");
             }
             propertyMethodMetadata = indexedProperty.getPropertyMethodMetadata();
         }
@@ -99,10 +105,9 @@ public class OrientDbVertexManager extends AbstractOrientDbPropertyManager<Verte
         query = query.has(XO_DISCRIMINATORS_PROPERTY + discriminator);
 
         query = query.has(propertyMethodMetadata.getDatastoreMetadata().getName(), value);
-        final Iterable<Vertex> vertices = query.vertices();
-        final Iterator<Vertex> iterator = vertices.iterator();
+        final Iterator<Vertex> iterator = query.vertices().iterator();
 
-        return new ResultIterator<Vertex>() {
+        return new ResultIterator<OrientVertex>() {
 
             @Override
             public boolean hasNext() {
@@ -110,8 +115,8 @@ public class OrientDbVertexManager extends AbstractOrientDbPropertyManager<Verte
             }
 
             @Override
-            public Vertex next() {
-                return iterator.next();
+            public OrientVertex next() {
+                return (OrientVertex) iterator.next();
             }
 
             @Override
@@ -127,16 +132,18 @@ public class OrientDbVertexManager extends AbstractOrientDbPropertyManager<Verte
     }
 
     @Override
-    public void migrateEntity(Vertex entity, TypeMetadataSet<EntityTypeMetadata<VertexMetadata>> types, Set<String> discriminators,
-            TypeMetadataSet<EntityTypeMetadata<VertexMetadata>> targetTypes, Set<String> targetDiscriminators) {
+    public void migrateEntity(OrientVertex entity, TypeMetadataSet<EntityTypeMetadata<VertexMetadata>> types,
+            Set<String> discriminators, TypeMetadataSet<EntityTypeMetadata<VertexMetadata>> targetTypes,
+            Set<String> targetDiscriminators) {
     }
 
     @Override
-    public void flushEntity(Vertex entity) {
+    public void flushEntity(OrientVertex entity) {
         // intentionally left blank
     }
 
-    private Map<String, Object> getProperties(Set<String> discriminators, Map<PrimitivePropertyMethodMetadata<PropertyMetadata>, Object> exampleEntity) {
+    private Map<String, Object> getProperties(Set<String> discriminators,
+            Map<PrimitivePropertyMethodMetadata<PropertyMetadata>, Object> exampleEntity) {
         Map<String, Object> properties = new HashMap<String, Object>();
         for (final String discriminator : discriminators) {
             properties.put(XO_DISCRIMINATORS_PROPERTY + discriminator, discriminator);
