@@ -8,13 +8,13 @@ Maven Users
 
 Our artifacts are published to the Maven Central repository and can be found under the ``com.smb-tec.xo`` groupId.
 
-You'll need to add the following dependency in your builds (and Maven will automatically include the additional transitive dependencies to OrientDB for you). It currently uses the OrientDB 1.7-rc2 version:
+You'll need to add the following dependency in your builds (and Maven will automatically include the additional transitive dependencies to OrientDB for you). It currently uses the OrientDB 2.0-M2 version:
 
-	<dependency>
-	  	<groupId>com.smb-tec.xo</groupId>
-	  	<artifactId>xo-orientdb</artifactId>
-	  	<version>0.0.1-SNAPSHOT</version>
-	</dependency>
+    <dependency>
+      <groupId>com.smb-tec.xo</groupId>
+      <artifactId>xo-orientdb</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
 
 Getting Started
 ---------------
@@ -31,7 +31,7 @@ Build
 
 Start the Maven build on command line
 
-	mvn clean package
+  mvn clean package
 
 Continuous Build
 ----------------
