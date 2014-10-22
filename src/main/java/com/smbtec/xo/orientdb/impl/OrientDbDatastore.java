@@ -21,15 +21,22 @@ package com.smbtec.xo.orientdb.impl;
 import java.net.URI;
 import java.util.Collection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.buschmais.xo.spi.datastore.Datastore;
 import com.buschmais.xo.spi.datastore.DatastoreMetadataFactory;
+import com.buschmais.xo.spi.metadata.type.EntityTypeMetadata;
+import com.buschmais.xo.spi.metadata.type.RelationTypeMetadata;
 import com.buschmais.xo.spi.metadata.type.TypeMetadata;
-
+import com.orientechnologies.common.util.OCallable;
+import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.smbtec.xo.orientdb.api.OrientDbDatastoreSession;
 import com.smbtec.xo.orientdb.impl.metadata.EdgeMetadata;
 import com.smbtec.xo.orientdb.impl.metadata.VertexMetadata;
-
+import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientVertexType;
 
 /**
  *
@@ -39,6 +46,8 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 public class OrientDbDatastore implements
         Datastore<OrientDbDatastoreSession<OrientGraph>, VertexMetadata, String, EdgeMetadata, String> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrientDbDatastore.class);
+
     private OrientGraph graph;
 
     public OrientDbDatastore(final URI uri) {
@@ -47,6 +56,32 @@ public class OrientDbDatastore implements
 
     @Override
     public void init(final Collection<TypeMetadata> registeredMetadata) {
+
+        graph.executeOutsideTx(new OCallable<OrientVertexType, OrientBaseGraph>() {
+
+            @Override
+            public OrientVertexType call(OrientBaseGraph iArgument) {
+                OSchema schema = graph.getRawGraph().getMetadata().getSchema();
+                for (TypeMetadata typeMetadata : registeredMetadata) {
+                    if (typeMetadata instanceof EntityTypeMetadata) {
+                        EntityTypeMetadata<VertexMetadata> entityTypeMetadata = (EntityTypeMetadata<VertexMetadata>) typeMetadata;
+                        String discriminator = entityTypeMetadata.getDatastoreMetadata().getDiscriminator();
+                        if (!schema.existsClass(discriminator)) {
+                            graph.createVertexType(discriminator);
+                        }
+                    } else if (typeMetadata instanceof RelationTypeMetadata) {
+                        RelationTypeMetadata<EdgeMetadata> edgeTypeMetadata = (RelationTypeMetadata<EdgeMetadata>) typeMetadata;
+                        String discriminator = edgeTypeMetadata.getDatastoreMetadata().getDiscriminator();
+                        if (!schema.existsClass(discriminator)) {
+                            graph.createEdgeType(discriminator);
+                        }
+                    }
+                }
+                return null;
+            }
+
+        });
+
     }
 
     @Override

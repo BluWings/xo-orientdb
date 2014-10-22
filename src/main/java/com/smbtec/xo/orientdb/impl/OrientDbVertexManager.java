@@ -18,11 +18,15 @@
  */
 package com.smbtec.xo.orientdb.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.buschmais.xo.api.ResultIterator;
 import com.buschmais.xo.api.XOException;
@@ -31,10 +35,8 @@ import com.buschmais.xo.spi.datastore.TypeMetadataSet;
 import com.buschmais.xo.spi.metadata.method.IndexedPropertyMethodMetadata;
 import com.buschmais.xo.spi.metadata.method.PrimitivePropertyMethodMetadata;
 import com.buschmais.xo.spi.metadata.type.EntityTypeMetadata;
-
 import com.smbtec.xo.orientdb.impl.metadata.PropertyMetadata;
 import com.smbtec.xo.orientdb.impl.metadata.VertexMetadata;
-
 import com.tinkerpop.blueprints.GraphQuery;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
@@ -47,6 +49,8 @@ import com.tinkerpop.blueprints.impls.orient.OrientVertex;
  */
 public class OrientDbVertexManager extends AbstractOrientDbPropertyManager<OrientVertex> implements
         DatastoreEntityManager<Object, OrientVertex, VertexMetadata, String, PropertyMetadata> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrientDbVertexManager.class);
 
     /**
      * This constant contains the prefix for discriminator properties.
@@ -88,7 +92,7 @@ public class OrientDbVertexManager extends AbstractOrientDbPropertyManager<Orien
     @Override
     public OrientVertex createEntity(TypeMetadataSet<EntityTypeMetadata<VertexMetadata>> types,
             Set<String> discriminators, Map<PrimitivePropertyMethodMetadata<PropertyMetadata>, Object> exampleEntity) {
-        final OrientVertex vertex = graph.addVertex(null);
+        final OrientVertex vertex = graph.addVertex(getDiscriminator(discriminators), (String) null);
         setProperties(vertex, getProperties(discriminators, exampleEntity));
         return vertex;
     }
@@ -171,6 +175,14 @@ public class OrientDbVertexManager extends AbstractOrientDbPropertyManager<Orien
         }
         return properties;
 
+    }
+
+    private String getDiscriminator(Set<String> discriminators) {
+        if (discriminators.isEmpty()) {
+            return null;
+        } else {
+            return discriminators.iterator().next();
+        }
     }
 
 }

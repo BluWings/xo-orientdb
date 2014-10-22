@@ -138,7 +138,7 @@ public class OrientDbMetadataFactory implements DatastoreMetadataFactory<VertexM
             }
         }
         if (name == null) {
-            name = StringUtils.uncapitalize(annotatedElement.getName());
+            name = "_" + StringUtils.uncapitalize(annotatedElement.getName());
         }
         return new EdgeMetadata(name);
     }
