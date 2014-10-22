@@ -1,5 +1,9 @@
 package com.smbtec.xo.orientdb.test.query;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+
 import java.net.URISyntaxException;
 import java.util.Collection;
 
@@ -12,17 +16,12 @@ import org.junit.runners.Parameterized;
 
 import com.buschmais.xo.api.CompositeObject;
 import com.buschmais.xo.api.Example;
-import com.buschmais.xo.api.XOException;
 import com.buschmais.xo.api.Query.Result;
 import com.buschmais.xo.api.Query.Result.CompositeRowObject;
 import com.buschmais.xo.api.XOManager;
 import com.buschmais.xo.api.bootstrap.XOUnit;
 import com.smbtec.xo.orientdb.test.AbstractOrientDbXOManagerTest;
 import com.smbtec.xo.orientdb.test.query.composite.Person;
-
-import static org.junit.Assert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
 
 @RunWith(Parameterized.class)
 public class SqlQueryTest extends AbstractOrientDbXOManagerTest {
@@ -85,9 +84,7 @@ public class SqlQueryTest extends AbstractOrientDbXOManagerTest {
         XOManager xoManager = getXoManager();
         xoManager.currentTransaction().begin();
         Object id = ((CompositeObject) john).getId();
-        Person person = xoManager
-                .createQuery("SELECT FROM [" + id + "]", Person.class)
-                .execute().getSingleResult();
+        Person person = xoManager.createQuery("SELECT FROM [" + id + "]", Person.class).execute().getSingleResult();
         assertThat(person, equalTo(john));
         xoManager.currentTransaction().commit();
     }
@@ -96,9 +93,8 @@ public class SqlQueryTest extends AbstractOrientDbXOManagerTest {
     public void countVerticesWithGivenField() {
         XOManager xoManager = getXoManager();
         xoManager.currentTransaction().begin();
-        Long count = xoManager
-                .createQuery("SELECT count(*) FROM V WHERE firstname = 'John'",
-                        Long.class).execute().getSingleResult();
+        Long count = xoManager.createQuery("SELECT count(*) FROM V WHERE firstname = 'John'", Long.class).execute()
+                .getSingleResult();
         assertThat(count, equalTo(1L));
         xoManager.currentTransaction().commit();
 
@@ -108,8 +104,8 @@ public class SqlQueryTest extends AbstractOrientDbXOManagerTest {
     public void selectOutEdgesFromVertex() {
         XOManager xoManager = getXoManager();
         xoManager.currentTransaction().begin();
-        Result<CompositeRowObject> result = xoManager.createQuery(
-                "SELECT outE() FROM V WHERE firstname = 'John'").execute();
+        Result<CompositeRowObject> result = xoManager.createQuery("SELECT outE() FROM V WHERE firstname = 'John'")
+                .execute();
         assertThat(result.hasResult(), is(true));
         xoManager.currentTransaction().commit();
     }
@@ -119,9 +115,8 @@ public class SqlQueryTest extends AbstractOrientDbXOManagerTest {
         XOManager xoManager = getXoManager();
         xoManager.currentTransaction().begin();
         Object id = ((CompositeObject) john).getId();
-        Integer count = xoManager
-                .createQuery("SELECT out().size() FROM [" + id + "]",
-                        Integer.class).execute().getSingleResult();
+        Integer count = xoManager.createQuery("SELECT out().size() FROM [" + id + "]", Integer.class).execute()
+                .getSingleResult();
         assertThat(count, equalTo(2));
         xoManager.currentTransaction().commit();
     }
@@ -131,7 +126,17 @@ public class SqlQueryTest extends AbstractOrientDbXOManagerTest {
         XOManager xoManager = getXoManager();
         xoManager.currentTransaction().begin();
         Result<Person> result = xoManager.createQuery("SELECT FROM V", Person.class).execute();
-        assertThat(result, IsIterableContainingInAnyOrder.<Person>containsInAnyOrder(john, mary, jDow));
+        assertThat(result, IsIterableContainingInAnyOrder.<Person> containsInAnyOrder(john, mary, jDow));
+        xoManager.currentTransaction().commit();
+    }
+
+    @Test
+    public void selectTypedVertex() {
+        XOManager xoManager = getXoManager();
+        xoManager.currentTransaction().begin();
+        Person person = xoManager.createQuery("SELECT FROM Person WHERE firstname = 'John'", Person.class).execute()
+                .getSingleResult();
+        assertThat(person, is(equalTo(john)));
         xoManager.currentTransaction().commit();
     }
 }
