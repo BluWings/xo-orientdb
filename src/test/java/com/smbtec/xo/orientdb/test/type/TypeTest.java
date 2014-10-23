@@ -10,7 +10,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import com.buschmais.xo.api.Query.Result;
 import com.buschmais.xo.api.XOManager;
 import com.buschmais.xo.api.bootstrap.XOUnit;
 import com.smbtec.xo.orientdb.test.AbstractOrientDbXOManagerTest;
@@ -34,11 +33,7 @@ public class TypeTest extends AbstractOrientDbXOManagerTest {
         XOManager xoManager = getXoManager();
         xoManager.currentTransaction().begin();
         ImplicitType implicitType = xoManager.create(ImplicitType.class);
-        xoManager.currentTransaction().commit();
-        xoManager.currentTransaction().begin();
-        Result<ImplicitType> result = xoManager.createQuery(
-                "SELECT FROM ImplicitType", ImplicitType.class).execute();
-        assertThat(result, hasItem(implicitType));
+        assertThat(executeQuery("SELECT FROM ImplicitType").getColumn("node"), hasItem(implicitType));
         xoManager.currentTransaction().commit();
     }
 
@@ -47,9 +42,7 @@ public class TypeTest extends AbstractOrientDbXOManagerTest {
         XOManager xoManager = getXoManager();
         xoManager.currentTransaction().begin();
         ExplicitType explicitType = xoManager.create(ExplicitType.class);
-        Result<ExplicitType> result = xoManager.createQuery(
-                "SELECT FROM EXPLICIT_TYPE", ExplicitType.class).execute();
-        assertThat(result, hasItem(explicitType));
+        assertThat(executeQuery("SELECT FROM EXPLICIT_TYPE").getColumn("node"), hasItem(explicitType));
         xoManager.currentTransaction().commit();
     }
 }
