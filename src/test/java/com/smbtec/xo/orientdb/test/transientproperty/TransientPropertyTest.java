@@ -44,9 +44,7 @@ public class TransientPropertyTest extends AbstractOrientDbXOManagerTest {
         closeXOmanager();
         xoManager = getXoManager();
         xoManager.currentTransaction().begin();
-        A result = xoManager
-                .createQuery("SELECT FROM A WHERE value = 'persistent value'",
-                        A.class).execute().getSingleResult();
+        A result = xoManager.find(A.class, "persistent value").getSingleResult();
         assertThat(result.getValue(), equalTo("persistent value"));
         assertThat(result.getTransientValue(), nullValue());
         xoManager.currentTransaction().commit();
