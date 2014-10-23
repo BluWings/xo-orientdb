@@ -36,4 +36,4 @@ Start the Maven build on command line
 Continuous Build
 ----------------
 
-[![Build Status](https://secure.travis-ci.org/BluWings/xo-orientdb.png)](http://travis-ci.org/BluWings/xo-orientdb)
+[![Build Status](https://secure.travis-ci.org/SMB-TEC/xo-orientdb.png)](http://travis-ci.org/SMB-TEC/xo-orientdb)
