@@ -22,9 +22,7 @@ import java.util.Map;
 
 import com.buschmais.xo.spi.datastore.DatastorePropertyManager;
 import com.buschmais.xo.spi.metadata.method.PrimitivePropertyMethodMetadata;
-
 import com.smbtec.xo.orientdb.impl.metadata.PropertyMetadata;
-
 import com.tinkerpop.blueprints.Element;
 import com.tinkerpop.blueprints.impls.orient.OrientElement;
 
@@ -57,6 +55,16 @@ public class AbstractOrientDbPropertyManager<E extends Element> implements Datas
 
     public void setProperties(E element, Map<String, Object> properties) {
         ((OrientElement) element).setProperties(properties);
+    }
+
+    protected Object[] convertProperties(Map<PrimitivePropertyMethodMetadata<PropertyMetadata>, Object> exampleEntity) {
+        Object[] properties = new Object[exampleEntity.size() * 2];
+        int counter = 0;
+        for (Map.Entry<PrimitivePropertyMethodMetadata<PropertyMetadata>, Object> entry : exampleEntity.entrySet()) {
+            properties[counter++] = entry.getKey().getDatastoreMetadata().getName();
+            properties[counter++] = entry.getValue();
+        }
+        return properties;
     }
 
 }

@@ -18,8 +18,6 @@
  */
 package com.smbtec.xo.orientdb.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -35,12 +33,16 @@ import com.buschmais.xo.spi.datastore.TypeMetadataSet;
 import com.buschmais.xo.spi.metadata.method.IndexedPropertyMethodMetadata;
 import com.buschmais.xo.spi.metadata.method.PrimitivePropertyMethodMetadata;
 import com.buschmais.xo.spi.metadata.type.EntityTypeMetadata;
+import com.google.common.collect.Iterables;
 import com.smbtec.xo.orientdb.impl.metadata.PropertyMetadata;
 import com.smbtec.xo.orientdb.impl.metadata.VertexMetadata;
 import com.tinkerpop.blueprints.GraphQuery;
 import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphQuery;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
+import com.tinkerpop.blueprints.impls.orient.OrientVertexType;
 
 /**
  *
@@ -51,11 +53,6 @@ public class OrientDbVertexManager extends AbstractOrientDbPropertyManager<Orien
         DatastoreEntityManager<Object, OrientVertex, VertexMetadata, String, PropertyMetadata> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrientDbVertexManager.class);
-
-    /**
-     * This constant contains the prefix for discriminator properties.
-     */
-    public static final String XO_DISCRIMINATORS_PROPERTY = "_xo_discriminator_";
 
     private final OrientGraph graph;
 
@@ -70,13 +67,7 @@ public class OrientDbVertexManager extends AbstractOrientDbPropertyManager<Orien
 
     @Override
     public Set<String> getEntityDiscriminators(OrientVertex entity) {
-        final Set<String> discriminators = new HashSet<>();
-        for (final String key : entity.getPropertyKeys()) {
-            if (key.startsWith(XO_DISCRIMINATORS_PROPERTY)) {
-                final String discriminator = entity.getProperty(key);
-                discriminators.add(discriminator);
-            }
-        }
+        final Set<String> discriminators = getDiscriminators(entity.getType());
         if (discriminators.isEmpty()) {
             throw new XOException(
                     "A vertex was found without discriminators. Does another framework alter the database?");
@@ -92,9 +83,7 @@ public class OrientDbVertexManager extends AbstractOrientDbPropertyManager<Orien
     @Override
     public OrientVertex createEntity(TypeMetadataSet<EntityTypeMetadata<VertexMetadata>> types,
             Set<String> discriminators, Map<PrimitivePropertyMethodMetadata<PropertyMetadata>, Object> exampleEntity) {
-        final OrientVertex vertex = graph.addVertex(getDiscriminator(discriminators), (String) null);
-        setProperties(vertex, getProperties(discriminators, exampleEntity));
-        return vertex;
+        return graph.addVertex(OrientBaseGraph.CLASS_PREFIX + getDiscriminator(discriminators), convertProperties(exampleEntity));
     }
 
     @Override
@@ -124,7 +113,7 @@ public class OrientDbVertexManager extends AbstractOrientDbPropertyManager<Orien
         Object value = entry.getValue();
 
         GraphQuery query = graph.query();
-        query = query.has(XO_DISCRIMINATORS_PROPERTY + discriminator);
+        query = (GraphQuery) ((OrientGraphQuery)query).labels(discriminator);
 
         query = query.has(propertyMethodMetadata.getDatastoreMetadata().getName(), value);
         final Iterator<Vertex> iterator = query.vertices().iterator();
@@ -164,25 +153,17 @@ public class OrientDbVertexManager extends AbstractOrientDbPropertyManager<Orien
         // intentionally left blank
     }
 
-    private Map<String, Object> getProperties(Set<String> discriminators,
-            Map<PrimitivePropertyMethodMetadata<PropertyMetadata>, Object> exampleEntity) {
-        Map<String, Object> properties = new HashMap<String, Object>();
-        for (final String discriminator : discriminators) {
-            properties.put(XO_DISCRIMINATORS_PROPERTY + discriminator, discriminator);
+    private Set<String> getDiscriminators(OrientVertexType vertexType) {
+        Set<String> discriminators = new HashSet<String>();
+        if (!vertexType.getName().equals("V")) {
+            discriminators.add(vertexType.getName());
+            discriminators.addAll(getDiscriminators(vertexType.getSuperClass()));
         }
-        for (Map.Entry<PrimitivePropertyMethodMetadata<PropertyMetadata>, Object> entry : exampleEntity.entrySet()) {
-            properties.put(entry.getKey().getDatastoreMetadata().getName(), entry.getValue());
-        }
-        return properties;
-
+        return discriminators;
     }
 
     private String getDiscriminator(Set<String> discriminators) {
-        if (discriminators.isEmpty()) {
-            return null;
-        } else {
-            return discriminators.iterator().next();
-        }
+        return Iterables.getFirst(discriminators, null);
     }
 
 }

@@ -25,10 +25,8 @@ import com.buschmais.xo.api.XOException;
 import com.buschmais.xo.spi.datastore.DatastoreRelationManager;
 import com.buschmais.xo.spi.metadata.method.PrimitivePropertyMethodMetadata;
 import com.buschmais.xo.spi.metadata.type.RelationTypeMetadata;
-
 import com.smbtec.xo.orientdb.impl.metadata.EdgeMetadata;
 import com.smbtec.xo.orientdb.impl.metadata.PropertyMetadata;
-
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.VertexQuery;
@@ -67,9 +65,9 @@ public class OrientDbEdgeManager extends AbstractOrientDbPropertyManager<OrientE
         final String name = metadata.getDatastoreMetadata().getDiscriminator();
         switch (direction) {
         case FROM:
-            return (OrientEdge) source.addEdge(name, target);
+            return (OrientEdge) source.addEdge(name, target, convertProperties(exampleEntity));
         case TO:
-            return (OrientEdge) target.addEdge(name, source);
+            return (OrientEdge) target.addEdge(name, source, convertProperties(exampleEntity));
         default:
             throw new XOException("Unknown direction '" + direction.name() + "'.");
         }
@@ -204,4 +202,5 @@ public class OrientDbEdgeManager extends AbstractOrientDbPropertyManager<OrientE
         }
 
     }
+
 }
