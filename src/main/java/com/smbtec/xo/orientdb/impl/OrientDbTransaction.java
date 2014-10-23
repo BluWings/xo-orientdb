@@ -20,7 +20,6 @@ package com.smbtec.xo.orientdb.impl;
 
 import com.buschmais.xo.api.XOException;
 import com.buschmais.xo.spi.datastore.DatastoreTransaction;
-
 import com.tinkerpop.blueprints.TransactionalGraph;
 
 /**

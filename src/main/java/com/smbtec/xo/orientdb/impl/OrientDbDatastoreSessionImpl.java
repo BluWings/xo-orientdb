@@ -25,13 +25,11 @@ import com.buschmais.xo.spi.datastore.DatastoreEntityManager;
 import com.buschmais.xo.spi.datastore.DatastoreQuery;
 import com.buschmais.xo.spi.datastore.DatastoreRelationManager;
 import com.buschmais.xo.spi.datastore.DatastoreTransaction;
-
 import com.smbtec.xo.orientdb.api.OrientDbDatastoreSession;
 import com.smbtec.xo.orientdb.api.annotation.OSQL;
 import com.smbtec.xo.orientdb.impl.metadata.EdgeMetadata;
 import com.smbtec.xo.orientdb.impl.metadata.PropertyMetadata;
 import com.smbtec.xo.orientdb.impl.metadata.VertexMetadata;
-
 import com.tinkerpop.blueprints.impls.orient.OrientEdge;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;

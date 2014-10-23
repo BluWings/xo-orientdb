@@ -30,7 +30,6 @@ import com.buschmais.xo.spi.reflection.AnnotatedElement;
 import com.buschmais.xo.spi.reflection.AnnotatedMethod;
 import com.buschmais.xo.spi.reflection.AnnotatedType;
 import com.buschmais.xo.spi.reflection.PropertyMethod;
-
 import com.smbtec.xo.orientdb.impl.metadata.CollectionPropertyMetadata;
 import com.smbtec.xo.orientdb.impl.metadata.EdgeMetadata;
 import com.smbtec.xo.orientdb.impl.metadata.IndexedPropertyMetadata;
@@ -38,12 +37,11 @@ import com.smbtec.xo.orientdb.impl.metadata.PropertyMetadata;
 import com.smbtec.xo.orientdb.impl.metadata.ReferencePropertyMetadata;
 import com.smbtec.xo.orientdb.impl.metadata.VertexMetadata;
 import com.smbtec.xo.tinkerpop.blueprints.api.annotation.Edge;
+import com.smbtec.xo.tinkerpop.blueprints.api.annotation.Edge.Incoming;
+import com.smbtec.xo.tinkerpop.blueprints.api.annotation.Edge.Outgoing;
 import com.smbtec.xo.tinkerpop.blueprints.api.annotation.Indexed;
 import com.smbtec.xo.tinkerpop.blueprints.api.annotation.Property;
 import com.smbtec.xo.tinkerpop.blueprints.api.annotation.Vertex;
-import com.smbtec.xo.tinkerpop.blueprints.api.annotation.Edge.Incoming;
-import com.smbtec.xo.tinkerpop.blueprints.api.annotation.Edge.Outgoing;
-
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Element;
 

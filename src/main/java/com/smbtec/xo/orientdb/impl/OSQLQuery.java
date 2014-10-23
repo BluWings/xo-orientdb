@@ -22,7 +22,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +32,6 @@ import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.smbtec.xo.orientdb.api.OrientDbDatastoreSession;
 import com.smbtec.xo.orientdb.api.annotation.OSQL;
 import com.tinkerpop.blueprints.impls.orient.OrientEdge;
-import com.tinkerpop.blueprints.impls.orient.OrientElement;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
