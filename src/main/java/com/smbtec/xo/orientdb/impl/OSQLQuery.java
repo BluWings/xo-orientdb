@@ -107,7 +107,8 @@ public class OSQLQuery implements DatastoreQuery<OSQL> {
         Map<String, Object> map = new HashMap<>();
         if (entity instanceof OrientVertex) {
             OrientVertex vertex = (OrientVertex) entity;
-            if (!vertex.getIdentity().isPersistent()) {
+            // negative cluster id means projected result set
+            if (vertex.getIdentity().getClusterId() < 0) {
                 for (String field : vertex.getPropertyKeys()) {
                     map.put(field,
                             entityRepresentation0(vertex.getProperty(field)));
